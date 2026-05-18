@@ -30,7 +30,6 @@ public class KthLargestNumber {
                     topLeft = matrix[i-1][j-1];
                 }
                 matrix[i][j] = matrix[i][j] ^ top ^ left ^ topLeft;
-                uniqueSet.add(matrix[i][j]);
             }
         }
         for(int i =0; i<n; i++){
