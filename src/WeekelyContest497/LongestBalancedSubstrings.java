@@ -6,7 +6,7 @@ public class LongestBalancedSubstrings {
     }
 
     public int longestBalanced(String s) {
-
+        return 0;
     }
 
 }
