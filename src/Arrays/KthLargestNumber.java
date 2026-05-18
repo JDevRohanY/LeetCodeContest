@@ -11,10 +11,9 @@ public class KthLargestNumber {
     }
     public static int kthLargestNumber(int[][] matrix, int k){
         //build the matrix
-        int n = matrix.length; //i
-        int m = matrix[0].length;  //j
+        int n = matrix.length;
+        int m = matrix[0].length;
 
-        Set<Integer> uniqueSet = new HashSet<>();
         for(int i=0; i<n; i++){
             for(int j=0; j<m; j++){
                 //find the adjacent cells values
