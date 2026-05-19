@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Practice List — Swiggy · Zomato · Uber · Microsoft</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #ffffff; --bg2: #f5f5f4; --bg3: #eeede9;
+            --text: #1a1a1a; --text2: #555550; --text3: #888882;
+            --border: rgba(0,0,0,0.1); --border2: rgba(0,0,0,0.2);
+            --easy: #27500a; --easy-bg: #eaf3de; --easy-border: #639922;
+            --med: #633806; --med-bg: #faeeda; --med-border: #ba7517;
+            --hard: #791f1f; --hard-bg: #fcebeb; --hard-border: #e24b4a;
+            --done-bg: #eaf3de; --done-border: #639922;
+            --info-bg: #e6f1fb; --info-text: #0c447c; --info-border: #378add;
+            --rad: 8px; --rad-lg: 12px;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #1a1a1a; --bg2: #242424; --bg3: #2e2e2e;
+                --text: #f0f0ee; --text2: #aaa9a4; --text3: #6a6a64;
+                --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.18);
+                --easy: #c0dd97; --easy-bg: #173404; --easy-border: #3b6d11;
+                --med: #fac775; --med-bg: #412402; --med-border: #854f0b;
+                --hard: #f7c1c1; --hard-bg: #501313; --hard-border: #a32d2d;
+                --done-bg: #173404; --done-border: #3b6d11;
+                --info-bg: #042c53; --info-text: #b5d4f4; --info-border: #185fa5;
+            }
+        }
+
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg3); color: var(--text); }
+        .page { max-width: 900px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+
+        h1 { font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+        .sub { font-size: 13px; color: var(--text2); margin-bottom: 1.5rem; }
+
+        /* Stats row */
+        .stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 1.5rem; }
+        .sc { background: var(--bg); border-radius: var(--rad); padding: 10px 12px; border: 0.5px solid var(--border); }
+        .sl { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 3px; }
+        .sv { font-size: 20px; font-weight: 600; }
+
+        /* Progress */
+        .prog-wrap { background: var(--bg2); border-radius: 20px; height: 5px; margin-bottom: 1.5rem; border: 0.5px solid var(--border); overflow: hidden; }
+        .prog-fill { height: 100%; background: var(--easy-border); border-radius: 20px; transition: width 0.3s; }
+
+        /* Filters */
+        .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.25rem; align-items: center; }
+        .filter-label { font-size: 12px; color: var(--text3); margin-right: 2px; }
+        .fb { padding: 5px 13px; border-radius: 20px; border: 0.5px solid var(--border2); background: var(--bg); font-size: 12px; cursor: pointer; color: var(--text2); font-family: inherit; transition: all 0.12s; }
+        .fb:hover { background: var(--bg2); }
+        .fb.on { background: var(--text); color: var(--bg); border-color: var(--text); }
+        .search-wrap { margin-left: auto; }
+        .search-wrap input { padding: 6px 12px; border-radius: var(--rad); border: 0.5px solid var(--border2); background: var(--bg2); color: var(--text); font-size: 13px; font-family: inherit; outline: none; width: 200px; }
+        .search-wrap input:focus { border-color: var(--info-border); }
+        .filter-sep { width: 1px; height: 20px; background: var(--border2); margin: 0 4px; }
+
+        /* Section */
+        .section { margin-bottom: 2rem; }
+        .section-title { font-size: 13px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; gap: 8px; }
+        .section-count { font-size: 11px; font-weight: 500; color: var(--text3); background: var(--bg2); padding: 2px 8px; border-radius: 20px; }
+
+        /* Table */
+        .qtable { width: 100%; border-collapse: collapse; }
+        .qtable th { font-size: 11px; color: var(--text3); font-weight: 500; text-align: left; padding: 6px 10px; text-transform: uppercase; letter-spacing: 0.4px; border-bottom: 0.5px solid var(--border2); }
+        .qtable td { padding: 9px 10px; font-size: 13px; border-bottom: 0.5px solid var(--border); vertical-align: middle; }
+        .qtable tr:last-child td { border-bottom: none; }
+        .qtable tr.done td { color: var(--text3); }
+        .qtable tr.done .q-name { text-decoration: line-through; }
+        .qtable tr:hover td { background: var(--bg2); }
+        .qtable tr.done:hover td { background: var(--done-bg); }
+
+        .ck { width: 17px; height: 17px; border-radius: 4px; border: 1.5px solid var(--border2); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; background: var(--bg); flex-shrink: 0; transition: all 0.12s; }
+        .ck:hover { border-color: var(--easy-border); }
+        .ck.on { background: var(--easy-bg); border-color: var(--easy-border); }
+        .ck.on::after { content: ''; width: 9px; height: 5px; border-left: 2px solid var(--easy); border-bottom: 2px solid var(--easy); transform: rotate(-45deg) translateY(-1px); display: block; }
+
+        .q-link { color: var(--info-text); text-decoration: none; font-weight: 500; }
+        .q-link:hover { text-decoration: underline; }
+
+        .diff { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; display: inline-block; }
+        .d-easy { background: var(--easy-bg); color: var(--easy); }
+        .d-med { background: var(--med-bg); color: var(--med); }
+        .d-hard { background: var(--hard-bg); color: var(--hard); }
+
+        .co-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+        .co { font-size: 10px; padding: 1px 6px; border-radius: 10px; border: 0.5px solid var(--border2); color: var(--text3); background: var(--bg2); white-space: nowrap; }
+        .co.swiggy { background: var(--med-bg); color: var(--med); border-color: var(--med-border); }
+        .co.zomato { background: var(--hard-bg); color: var(--hard); border-color: var(--hard-border); }
+        .co.uber { background: var(--info-bg); color: var(--info-text); border-color: var(--info-border); }
+        .co.ms { background: var(--easy-bg); color: var(--easy); border-color: var(--easy-border); }
+
+        .day-tag { font-size: 11px; color: var(--text3); white-space: nowrap; }
+
+        .hidden { display: none; }
+
+        /* Toast */
+        .toast { position: fixed; bottom: 24px; right: 24px; background: var(--text); color: var(--bg); padding: 9px 16px; border-radius: var(--rad); font-size: 13px; opacity: 0; transition: opacity 0.25s; pointer-events: none; z-index: 99; }
+        .toast.show { opacity: 1; }
+
+        @media (max-width: 600px) {
+            .stats { grid-template-columns: repeat(3, 1fr); }
+            .co-tags { display: none; }
+            .search-wrap input { width: 140px; }
+            .qtable th:nth-child(5), .qtable td:nth-child(5) { display: none; }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <h1>DSA practice list</h1>
+    <p class="sub">Swiggy · Zomato · Uber · Microsoft &nbsp;|&nbsp; 120 curated questions · progress saves automatically</p>
+
+    <div class="stats">
+        <div class="sc"><div class="sl">Total</div><div class="sv" id="s-total">120</div></div>
+        <div class="sc"><div class="sl">Done</div><div class="sv" id="s-done">0</div></div>
+        <div class="sc"><div class="sl">Remaining</div><div class="sv" id="s-rem">120</div></div>
+        <div class="sc"><div class="sl">Easy</div><div class="sv" id="s-easy">0</div></div>
+        <div class="sc"><div class="sl">Med+Hard</div><div class="sv" id="s-mh">0</div></div>
+    </div>
+    <div class="prog-wrap"><div class="prog-fill" id="prog" style="width:0%"></div></div>
+
+    <div class="filters">
+        <span class="filter-label">Pattern:</span>
+        <button class="fb on" onclick="setFilter('pattern','all',this)">All</button>
+        <button class="fb" onclick="setFilter('pattern','arrays',this)">Arrays</button>
+        <button class="fb" onclick="setFilter('pattern','strings',this)">Strings</button>
+        <button class="fb" onclick="setFilter('pattern','trees',this)">Trees</button>
+        <button class="fb" onclick="setFilter('pattern','graphs',this)">Graphs</button>
+        <button class="fb" onclick="setFilter('pattern','dp',this)">DP</button>
+        <button class="fb" onclick="setFilter('pattern','heap',this)">Heap</button>
+        <button class="fb" onclick="setFilter('pattern','backtrack',this)">Backtrack</button>
+        <button class="fb" onclick="setFilter('pattern','trie',this)">Trie</button>
+        <button class="fb" onclick="setFilter('pattern','binsearch',this)">Bin Search</button>
+        <button class="fb" onclick="setFilter('pattern','design',this)">Design</button>
+        <div class="filter-sep"></div>
+        <span class="filter-label">Company:</span>
+        <button class="fb on" onclick="setFilter('company','all',this)">All</button>
+        <button class="fb" onclick="setFilter('company','swiggy',this)">Swiggy</button>
+        <button class="fb" onclick="setFilter('company','zomato',this)">Zomato</button>
+        <button class="fb" onclick="setFilter('company','uber',this)">Uber</button>
+        <button class="fb" onclick="setFilter('company','ms',this)">Microsoft</button>
+        <div class="filter-sep"></div>
+        <span class="filter-label">Status:</span>
+        <button class="fb on" onclick="setFilter('status','all',this)">All</button>
+        <button class="fb" onclick="setFilter('status','pending',this)">Pending</button>
+        <button class="fb" onclick="setFilter('status','done',this)">Done</button>
+        <div class="search-wrap">
+            <input type="text" id="search" placeholder="Search questions..." oninput="renderAll()">
+        </div>
+    </div>
+
+    <div id="container"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+    // Q format: [id, name, url, difficulty, pattern, companies[], day]
+    // companies: 's'=swiggy, 'z'=zomato, 'u'=uber, 'm'=microsoft
+    const Q = [
+        // ── ARRAYS ──────────────────────────────────────────────────────────────
+        [1,'Two Sum','https://leetcode.com/problems/two-sum/','Easy','arrays',['s','z','u','m'],1],
+        [2,'Best Time to Buy and Sell Stock','https://leetcode.com/problems/best-time-to-buy-and-sell-stock/','Easy','arrays',['s','z','u','m'],1],
+        [3,'Product of Array Except Self','https://leetcode.com/problems/product-of-array-except-self/','Medium','arrays',['u','m'],1],
+        [4,'Maximum Subarray','https://leetcode.com/problems/maximum-subarray/','Medium','arrays',['s','m'],1],
+        [5,'Container With Most Water','https://leetcode.com/problems/container-with-most-water/','Medium','arrays',['u','m'],1],
+        [6,'3Sum','https://leetcode.com/problems/3sum/','Medium','arrays',['u','m'],5],
+        [7,'Merge Intervals','https://leetcode.com/problems/merge-intervals/','Medium','arrays',['s','z','u','m'],16],
+        [8,'Meeting Rooms II','https://leetcode.com/problems/meeting-rooms-ii/','Medium','arrays',['u'],16],
+        [9,'Jump Game','https://leetcode.com/problems/jump-game/','Medium','arrays',['u','m'],16],
+        [10,'Jump Game II','https://leetcode.com/problems/jump-game-ii/','Medium','arrays',['u'],16],
+        [11,'Set Matrix Zeroes','https://leetcode.com/problems/set-matrix-zeroes/','Medium','arrays',['s','z'],1],
+        [12,'Rotate Array','https://leetcode.com/problems/rotate-array/','Medium','arrays',['m'],1],
+        [13,'Find Minimum in Rotated Sorted Array','https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/','Medium','binsearch',['u','m'],8],
+        [14,'Search in Rotated Sorted Array','https://leetcode.com/problems/search-in-rotated-sorted-array/','Medium','binsearch',['u','m'],8],
+        [15,'Maximum Points You Can Obtain From Cards','https://leetcode.com/problems/maximum-points-you-can-obtain-from-cards/','Medium','arrays',['u'],9],
+        [16,'Trapping Rain Water','https://leetcode.com/problems/trapping-rain-water/','Hard','arrays',['u','m'],23],
+        [17,'Task Scheduler','https://leetcode.com/problems/task-scheduler/','Medium','arrays',['u'],16],
+        [18,'Non-overlapping Intervals','https://leetcode.com/problems/non-overlapping-intervals/','Medium','arrays',['u'],16],
+        [19,'Minimum Number of Arrows to Burst Balloons','https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/','Medium','arrays',['u'],16],
+        [20,'Spiral Matrix','https://leetcode.com/problems/spiral-matrix/','Medium','arrays',['m'],1],
+
+        // ── STRINGS ─────────────────────────────────────────────────────────────
+        [21,'Longest Substring Without Repeating Characters','https://leetcode.com/problems/longest-substring-without-repeating-characters/','Medium','strings',['s','z','u','m'],5],
+        [22,'Minimum Window Substring','https://leetcode.com/problems/minimum-window-substring/','Hard','strings',['s','u','m'],5],
+        [23,'Valid Anagram','https://leetcode.com/problems/valid-anagram/','Easy','strings',['s','z','u'],15],
+        [24,'Group Anagrams','https://leetcode.com/problems/group-anagrams/','Medium','strings',['s','z','m'],15],
+        [25,'Longest Palindromic Substring','https://leetcode.com/problems/longest-palindromic-substring/','Medium','strings',['z','m'],15],
+        [26,'Palindromic Substrings','https://leetcode.com/problems/palindromic-substrings/','Medium','strings',['z'],15],
+        [27,'Encode and Decode Strings','https://leetcode.com/problems/encode-and-decode-strings/','Medium','strings',['u'],15],
+        [28,'Valid Parentheses','https://leetcode.com/problems/valid-parentheses/','Easy','strings',['s','z','u','m'],15],
+        [29,'Reverse Words in a String','https://leetcode.com/problems/reverse-words-in-a-string/','Medium','strings',['m'],15],
+        [30,'String to Integer (atoi)','https://leetcode.com/problems/string-to-integer-atoi/','Medium','strings',['m'],15],
+
+        // ── SLIDING WINDOW ───────────────────────────────────────────────────────
+        [31,'Sliding Window Maximum','https://leetcode.com/problems/sliding-window-maximum/','Hard','arrays',['s','z'],5],
+        [32,'Permutation in String','https://leetcode.com/problems/permutation-in-string/','Medium','strings',['m'],5],
+        [33,'Longest Repeating Character Replacement','https://leetcode.com/problems/longest-repeating-character-replacement/','Medium','strings',['m'],5],
+        [34,'Fruit Into Baskets','https://leetcode.com/problems/fruit-into-baskets/','Medium','arrays',['s','z'],5],
+
+        // ── BINARY SEARCH ───────────────────────────────────────────────────────
+        [35,'Kth Smallest Element in a BST','https://leetcode.com/problems/kth-smallest-element-in-a-bst/','Medium','binsearch',['u','m'],8],
+        [36,'Find Peak Element','https://leetcode.com/problems/find-peak-element/','Medium','binsearch',['u'],8],
+        [37,'Search a 2D Matrix','https://leetcode.com/problems/search-a-2d-matrix/','Medium','binsearch',['m'],8],
+        [38,'Kth Largest Element in an Array','https://leetcode.com/problems/kth-largest-element-in-an-array/','Medium','heap',['u','m'],9],
+        [39,'Median of Two Sorted Arrays','https://leetcode.com/problems/median-of-two-sorted-arrays/','Hard','binsearch',['u','m'],23],
+        [40,'Capacity to Ship Packages Within D Days','https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/','Medium','binsearch',['u'],8],
+
+        // ── LINKED LISTS ────────────────────────────────────────────────────────
+        [41,'Reverse Linked List','https://leetcode.com/problems/reverse-linked-list/','Easy','arrays',['s','z','u','m'],1],
+        [42,'Reverse Nodes in k-Group','https://leetcode.com/problems/reverse-nodes-in-k-group/','Hard','arrays',['u'],8],
+        [43,'Linked List Cycle','https://leetcode.com/problems/linked-list-cycle/','Easy','arrays',['s','z'],1],
+        [44,'Merge Two Sorted Lists','https://leetcode.com/problems/merge-two-sorted-lists/','Easy','arrays',['s','z','m'],1],
+        [45,'Remove Nth Node From End of List','https://leetcode.com/problems/remove-nth-node-from-end-of-list/','Medium','arrays',['u','m'],1],
+        [46,'Add Two Numbers','https://leetcode.com/problems/add-two-numbers/','Medium','arrays',['m'],1],
+
+        // ── TREES ───────────────────────────────────────────────────────────────
+        [47,'Maximum Depth of Binary Tree','https://leetcode.com/problems/maximum-depth-of-binary-tree/','Easy','trees',['s','z','m'],4],
+        [48,'Validate Binary Search Tree','https://leetcode.com/problems/validate-binary-search-tree/','Medium','trees',['u','m'],4],
+        [49,'Lowest Common Ancestor of a BST','https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/','Medium','trees',['u','m'],4],
+        [50,'Binary Tree Level Order Traversal','https://leetcode.com/problems/binary-tree-level-order-traversal/','Medium','trees',['s','z','u','m'],4],
+        [51,'Binary Tree Right Side View','https://leetcode.com/problems/binary-tree-right-side-view/','Medium','trees',['m'],4],
+        [52,'Serialize and Deserialize Binary Tree','https://leetcode.com/problems/serialize-and-deserialize-binary-tree/','Hard','trees',['u','m'],18],
+        [53,'Diameter of Binary Tree','https://leetcode.com/problems/diameter-of-binary-tree/','Easy','trees',['s','z'],4],
+        [54,'Construct Binary Tree from Preorder and Inorder','https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/','Medium','trees',['m'],4],
+        [55,'Path Sum II','https://leetcode.com/problems/path-sum-ii/','Medium','trees',['u'],4],
+        [56,'Flatten Binary Tree to Linked List','https://leetcode.com/problems/flatten-binary-tree-to-linked-list/','Medium','trees',['m'],4],
+
+        // ── GRAPHS ──────────────────────────────────────────────────────────────
+        [57,'Number of Islands','https://leetcode.com/problems/number-of-islands/','Medium','graphs',['s','z','u','m'],2],
+        [58,'Clone Graph','https://leetcode.com/problems/clone-graph/','Medium','graphs',['m'],2],
+        [59,'Course Schedule','https://leetcode.com/problems/course-schedule/','Medium','graphs',['u','m'],2],
+        [60,'Course Schedule II','https://leetcode.com/problems/course-schedule-ii/','Medium','graphs',['u','m'],2],
+        [61,'Pacific Atlantic Water Flow','https://leetcode.com/problems/pacific-atlantic-water-flow/','Medium','graphs',['u'],11],
+        [62,'Word Ladder','https://leetcode.com/problems/word-ladder/','Hard','graphs',['u','m'],11],
+        [63,'Alien Dictionary','https://leetcode.com/problems/alien-dictionary/','Hard','graphs',['u'],11],
+        [64,'Cheapest Flights Within K Stops','https://leetcode.com/problems/cheapest-flights-within-k-stops/','Medium','graphs',['u'],11],
+        [65,'Network Delay Time','https://leetcode.com/problems/network-delay-time/','Medium','graphs',['u'],11],
+        [66,'Bus Routes','https://leetcode.com/problems/bus-routes/','Hard','graphs',['u'],11],
+        [67,'Rotting Oranges','https://leetcode.com/problems/rotting-oranges/','Medium','graphs',['s','z'],2],
+        [68,'Word Search','https://leetcode.com/problems/word-search/','Medium','graphs',['m'],10],
+        [69,'Surrounded Regions','https://leetcode.com/problems/surrounded-regions/','Medium','graphs',['u'],11],
+        [70,'Redundant Connection','https://leetcode.com/problems/redundant-connection/','Medium','graphs',['u','m'],11],
+
+        // ── HEAP / PRIORITY QUEUE ───────────────────────────────────────────────
+        [71,'Merge K Sorted Lists','https://leetcode.com/problems/merge-k-sorted-lists/','Hard','heap',['u','m'],9],
+        [72,'Top K Frequent Elements','https://leetcode.com/problems/top-k-frequent-elements/','Medium','heap',['s','z','u','m'],9],
+        [73,'Find Median from Data Stream','https://leetcode.com/problems/find-median-from-data-stream/','Hard','heap',['u'],9],
+        [74,'K Closest Points to Origin','https://leetcode.com/problems/k-closest-points-to-origin/','Medium','heap',['u'],9],
+        [75,'Top K Frequent Words','https://leetcode.com/problems/top-k-frequent-words/','Medium','heap',['s','z'],9],
+        [76,'Ugly Number II','https://leetcode.com/problems/ugly-number-ii/','Medium','heap',['m'],9],
+
+        // ── DYNAMIC PROGRAMMING ─────────────────────────────────────────────────
+        [77,'Climbing Stairs','https://leetcode.com/problems/climbing-stairs/','Easy','dp',['s','z','m'],3],
+        [78,'Coin Change','https://leetcode.com/problems/coin-change/','Medium','dp',['s','z','u','m'],3],
+        [79,'Longest Common Subsequence','https://leetcode.com/problems/longest-common-subsequence/','Medium','dp',['s','z','m'],3],
+        [80,'Longest Increasing Subsequence','https://leetcode.com/problems/longest-increasing-subsequence/','Medium','dp',['u','m'],13],
+        [81,'Edit Distance','https://leetcode.com/problems/edit-distance/','Medium','dp',['u','m'],13],
+        [82,'Unique Paths','https://leetcode.com/problems/unique-paths/','Medium','dp',['s','z','m'],3],
+        [83,'House Robber','https://leetcode.com/problems/house-robber/','Medium','dp',['u','m'],3],
+        [84,'House Robber II','https://leetcode.com/problems/house-robber-ii/','Medium','dp',['m'],13],
+        [85,'Word Break','https://leetcode.com/problems/word-break/','Medium','dp',['s','z','m'],13],
+        [86,'Partition Equal Subset Sum','https://leetcode.com/problems/partition-equal-subset-sum/','Medium','dp',['m'],13],
+        [87,'Target Sum','https://leetcode.com/problems/target-sum/','Medium','dp',['u'],13],
+        [88,'Burst Balloons','https://leetcode.com/problems/burst-balloons/','Hard','dp',['u'],13],
+        [89,'Regular Expression Matching','https://leetcode.com/problems/regular-expression-matching/','Hard','dp',['u','m'],13],
+        [90,'Optimal Strategy for a Game','https://leetcode.com/problems/predict-the-winner/','Medium','dp',['u'],13],
+        [91,'DP on Trees: Diameter','https://leetcode.com/problems/diameter-of-binary-tree/','Easy','dp',['u'],13],
+        [92,'Maximum Product Subarray','https://leetcode.com/problems/maximum-product-subarray/','Medium','dp',['s','z','u'],3],
+
+        // ── BACKTRACKING ────────────────────────────────────────────────────────
+        [93,'Subsets','https://leetcode.com/problems/subsets/','Medium','backtrack',['u','m'],10],
+        [94,'Subsets II','https://leetcode.com/problems/subsets-ii/','Medium','backtrack',['m'],10],
+        [95,'Permutations','https://leetcode.com/problems/permutations/','Medium','backtrack',['s','z','u'],10],
+        [96,'Combination Sum','https://leetcode.com/problems/combination-sum/','Medium','backtrack',['u','m'],10],
+        [97,'Combination Sum II','https://leetcode.com/problems/combination-sum-ii/','Medium','backtrack',['m'],10],
+        [98,'Letter Combinations of a Phone Number','https://leetcode.com/problems/letter-combinations-of-a-phone-number/','Medium','backtrack',['u','m'],10],
+        [99,'N-Queens','https://leetcode.com/problems/n-queens/','Hard','backtrack',['u'],23],
+        [100,'Palindrome Partitioning','https://leetcode.com/problems/palindrome-partitioning/','Medium','backtrack',['m'],10],
+
+        // ── TRIE ────────────────────────────────────────────────────────────────
+        [101,'Implement Trie','https://leetcode.com/problems/implement-trie-prefix-tree/','Medium','trie',['s','z','u','m'],19],
+        [102,'Word Search II','https://leetcode.com/problems/word-search-ii/','Hard','trie',['u','m'],19],
+        [103,'Design Search Autocomplete System','https://leetcode.com/problems/design-search-autocomplete-system/','Hard','trie',['s','z','u'],19],
+        [104,'Design Add and Search Words','https://leetcode.com/problems/design-add-and-search-words-data-structure/','Medium','trie',['m'],19],
+
+        // ── DESIGN (SYSTEM / DATA STRUCTURE) ────────────────────────────────────
+        [105,'LRU Cache','https://leetcode.com/problems/lru-cache/','Medium','design',['s','z','u','m'],4],
+        [106,'LFU Cache','https://leetcode.com/problems/lfu-cache/','Hard','design',['u','m'],18],
+        [107,'Design Twitter','https://leetcode.com/problems/design-twitter/','Medium','design',['s','z','m'],18],
+        [108,'Design Hit Counter','https://leetcode.com/problems/design-hit-counter/','Medium','design',['u'],3],
+        [109,'Design In-Memory File System','https://leetcode.com/problems/design-in-memory-file-system/','Hard','design',['m'],26],
+        [110,'Insert Delete GetRandom O(1)','https://leetcode.com/problems/insert-delete-getrandom-o1/','Medium','design',['s','z'],9],
+        [111,'Min Stack','https://leetcode.com/problems/min-stack/','Medium','design',['m'],8],
+        [112,'Design Browser History','https://leetcode.com/problems/design-browser-history/','Medium','design',['m'],18],
+        [113,'Design a Food Rating System','https://leetcode.com/problems/design-a-food-rating-system/','Medium','design',['s','z'],15],
+        [114,'Time Based Key-Value Store','https://leetcode.com/problems/time-based-key-value-store/','Medium','design',['u'],8],
+
+        // ── STACK / MONOTONIC ───────────────────────────────────────────────────
+        [115,'Daily Temperatures','https://leetcode.com/problems/daily-temperatures/','Medium','arrays',['s','z','u'],5],
+        [116,'Largest Rectangle in Histogram','https://leetcode.com/problems/largest-rectangle-in-histogram/','Hard','arrays',['u'],23],
+        [117,'Next Greater Element I','https://leetcode.com/problems/next-greater-element-i/','Easy','arrays',['m'],5],
+        [118,'Evaluate Reverse Polish Notation','https://leetcode.com/problems/evaluate-reverse-polish-notation/','Medium','arrays',['m'],5],
+
+        // ── CONCURRENCY ─────────────────────────────────────────────────────────
+        [119,'Print in Order','https://leetcode.com/problems/print-in-order/','Easy','design',['u'],10],
+        [120,'Print FooBar Alternately','https://leetcode.com/problems/print-foobar-alternately/','Medium','design',['u','m'],25],
+    ];
+
+    const SECTION_NAMES = {
+        arrays: 'Arrays, Sliding Window & Linked Lists',
+        strings: 'Strings',
+        binsearch: 'Binary Search',
+        trees: 'Trees & BST',
+        graphs: 'Graphs (BFS / DFS / Topological)',
+        heap: 'Heap & Priority Queue',
+        dp: 'Dynamic Programming',
+        backtrack: 'Backtracking',
+        trie: 'Trie',
+        design: 'Design & Data Structures',
+    };
+
+    const SECTION_ORDER = ['arrays','strings','binsearch','trees','graphs','heap','dp','backtrack','trie','design'];
+
+    const CO_MAP = { s:'swiggy', z:'zomato', u:'uber', m:'ms' };
+    const CO_LABEL = { s:'Swiggy', z:'Zomato', u:'Uber', m:'Microsoft' };
+
+    const SK = 'dsa30_v1';
+    let state = { done: [] };
+    function load() {
+        try { const r = localStorage.getItem(SK); if (r) state = JSON.parse(r); if (!Array.isArray(state.done)) state.done = []; } catch(e) { state = {done:[]}; }
+    }
+    function save() { try { localStorage.setItem(SK, JSON.stringify(state)); } catch(e) {} }
+
+    let filters = { pattern: 'all', company: 'all', status: 'all' };
+
+    function setFilter(type, val, btn) {
+        filters[type] = val;
+        const group = btn.parentElement.querySelectorAll('.fb');
+        // only toggle within same group (between the separators)
+        let inGroup = false;
+        const allBtns = document.querySelectorAll('.fb');
+        // simple approach: find buttons that call setFilter with same type
+        allBtns.forEach(b => {
+            const oc = b.getAttribute('onclick') || '';
+            if (oc.includes(`'${type}'`)) b.classList.remove('on');
+        });
+        btn.classList.add('on');
+        renderAll();
+    }
+
+    function renderAll() {
+        const search = document.getElementById('search').value.toLowerCase();
+        const container = document.getElementById('container');
+        container.innerHTML = '';
+
+        let totalVisible = 0;
+
+        SECTION_ORDER.forEach(pattern => {
+            let qs = Q.filter(q => {
+                if (filters.pattern !== 'all' && q[4] !== filters.pattern) return false;
+                if (filters.company !== 'all' && !q[5].includes(Object.keys(CO_MAP).find(k => CO_MAP[k] === filters.company))) return false;
+                if (filters.status === 'done' && !state.done.includes(q[0])) return false;
+                if (filters.status === 'pending' && state.done.includes(q[0])) return false;
+                if (search && !q[1].toLowerCase().includes(search)) return false;
+                if (q[4] !== pattern) return false;
+                return true;
+            });
+
+            if (qs.length === 0) return;
+            totalVisible += qs.length;
+
+            const sec = document.createElement('div');
+            sec.className = 'section';
+
+            const rows = qs.map(q => {
+                const isDone = state.done.includes(q[0]);
+                const coTags = q[5].map(c => `<span class="co ${CO_MAP[c]}">${CO_LABEL[c]}</span>`).join('');
+                const diffCls = q[3] === 'Easy' ? 'd-easy' : q[3] === 'Medium' ? 'd-med' : 'd-hard';
+                return `<tr class="${isDone ? 'done' : ''}" id="row-${q[0]}">
+        <td style="width:32px"><div class="ck ${isDone ? 'on' : ''}" onclick="toggle(${q[0]},this)" role="checkbox" aria-checked="${isDone}" aria-label="Mark done"></div></td>
+        <td class="q-name"><a class="q-link" href="${q[2]}" target="_blank" rel="noopener">${q[1]}</a></td>
+        <td style="width:80px"><span class="diff ${diffCls}">${q[3]}</span></td>
+        <td style="width:200px"><div class="co-tags">${coTags}</div></td>
+        <td style="width:60px"><span class="day-tag">Day ${q[6]}</span></td>
+      </tr>`;
+            }).join('');
+
+            const doneInSection = qs.filter(q => state.done.includes(q[0])).length;
+
+            sec.innerHTML = `
+      <div class="section-title">
+        ${SECTION_NAMES[pattern]}
+        <span class="section-count">${doneInSection}/${qs.length} done</span>
+      </div>
+      <table class="qtable">
+        <thead><tr>
+          <th></th>
+          <th>Problem</th>
+          <th>Difficulty</th>
+          <th>Company</th>
+          <th>Day</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+            container.appendChild(sec);
+        });
+
+        if (totalVisible === 0) {
+            container.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--text3);font-size:14px">No questions match your filters.</div>`;
+        }
+
+        updateStats();
+    }
+
+    function toggle(id, el) {
+        const i = state.done.indexOf(id);
+        if (i > -1) { state.done.splice(i, 1); }
+        else { state.done.push(id); }
+        save();
+        el.classList.toggle('on');
+        el.setAttribute('aria-checked', String(state.done.includes(id)));
+        const row = document.getElementById('row-' + id);
+        if (row) {
+            row.classList.toggle('done');
+            const qname = row.querySelector('.q-name');
+            if (qname) qname.classList.toggle('q-name');
+        }
+        updateStats();
+        showToast(state.done.includes(id) ? '✓ Marked done' : 'Marked pending');
+    }
+
+    function updateStats() {
+        const total = Q.length;
+        const done = state.done.length;
+        const rem = total - done;
+        const easyDone = state.done.filter(id => { const q = Q.find(q => q[0] === id); return q && q[3] === 'Easy'; }).length;
+        const mhDone = state.done.filter(id => { const q = Q.find(q => q[0] === id); return q && q[3] !== 'Easy'; }).length;
+        document.getElementById('s-total').textContent = total;
+        document.getElementById('s-done').textContent = done;
+        document.getElementById('s-rem').textContent = rem;
+        document.getElementById('s-easy').textContent = easyDone;
+        document.getElementById('s-mh').textContent = mhDone;
+        document.getElementById('prog').style.width = Math.round((done / total) * 100) + '%';
+    }
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 1800);
+    }
+
+    load();
+    renderAll();
+</script>
+</body>
+</html>
