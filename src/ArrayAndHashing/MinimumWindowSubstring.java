@@ -2,6 +2,8 @@ package ArrayAndHashing;
 
 import java.util.HashMap;
 
+//76. Minimum Window Substring
+//https://leetcode.com/problems/minimum-window-substring/description/
 public class MinimumWindowSubstring {
     public String minWindow(String s, String t) {
         int n = s.length();
