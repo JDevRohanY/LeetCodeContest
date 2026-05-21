@@ -11,9 +11,7 @@ Get the ans : O(n)
 Tc : O(n log n)
  */
 public class findMinElement {
-    static void main(String[] args) {
 
-    }
 }
 
 //List of employees

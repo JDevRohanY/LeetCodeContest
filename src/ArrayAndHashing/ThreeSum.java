@@ -5,10 +5,6 @@ import java.util.*;
 //15. 3Sum
 //https://leetcode.com/problems/3sum/description/
 public class ThreeSum {
-    static void main(String[] args) {
-
-    }
-
     public List<List<Integer>> threeSum(int[] nums) {
         Arrays.sort(nums);
         List<List<Integer>> res = new ArrayList<>();

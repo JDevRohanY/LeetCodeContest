@@ -3,9 +3,6 @@ package ArrayAndHashing;
 //11. Container With Most Water
 //https://leetcode.com/problems/container-with-most-water/
 public class ContainerWithMostWater {
-    static void main(String[] args) {
-
-    }
 
     public int maxArea(int[] height) {
         int start = 0;

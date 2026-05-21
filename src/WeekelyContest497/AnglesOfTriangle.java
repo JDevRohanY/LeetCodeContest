@@ -6,9 +6,6 @@ import java.util.Arrays;
 
  */
 public class AnglesOfTriangle {
-    static void main() {
-
-    }
 
     public static double[] internalAngles(int[] sides) {
         double a = sides[0];

@@ -3,9 +3,6 @@ package Interviews;
 import java.util.List;
 
 public class CalculateSeats_SmartCoinOlyv {
-    static void main() {
-
-    }
 /*
             [2, 5] -> 20
             [1, 2] -> 10

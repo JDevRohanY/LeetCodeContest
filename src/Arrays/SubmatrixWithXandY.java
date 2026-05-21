@@ -4,9 +4,6 @@ package Arrays;
 https://leetcode.com/problems/count-submatrices-with-equal-frequency-of-x-and-y/description/?envType=problem-list-v2&envId=array
  */
 public class SubmatrixWithXandY {
-    static void main(String[] args) {
-
-    }
 
     private int numberOfSubmatrices(char[][] grid) {
         //first we need to make prefix sum array and contains x

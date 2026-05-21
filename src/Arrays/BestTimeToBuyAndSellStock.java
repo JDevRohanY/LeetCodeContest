@@ -4,9 +4,6 @@ package Arrays;
 
 //121. Best Time to Buy and Sell Stock
 public class BestTimeToBuyAndSellStock {
-    static void main(String[] args) {
-
-    }
 
     public int maxProfit(int[] prices) {
         int currLowest = prices[0];

@@ -7,9 +7,6 @@ import java.util.PriorityQueue;
 
 // 3309. Maximum Possible Number by Binary Concatenation
 public class MaximumPossibleNumber {
-    static void main(String[] args) {
-
-    }
 
     public int maxGoodNumber(int[] nums) {
         PriorityQueue<Integer> pq = new PriorityQueue<>((Integer a, Integer b)->{

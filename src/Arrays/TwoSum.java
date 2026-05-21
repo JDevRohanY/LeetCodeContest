@@ -7,9 +7,7 @@ import java.util.Set;
 
 //1. Two Sum
 public class TwoSum {
-    static void main(String[] args) {
 
-    }
     public int[] twoSum(int[] nums, int target) {
         HashMap<Integer, Integer> hm = new HashMap<>();
         for(int i=0; i<nums.length; i++){
