@@ -1,8 +1,7 @@
 package ArrayAndHashing;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.PriorityQueue;
+import java.util.*;
+
 class Pair {
     int data;
     int freq;
@@ -15,35 +14,38 @@ class Pair {
 //https://leetcode.com/problems/top-k-frequent-elements/
 public class KMostFrequentElement {
     public int[] topKFrequent(int[] nums, int k) {
-        //calculate the frequency of each element using a hashmap
+        //first make the frequency map
         Map<Integer, Integer> fm = new HashMap<>();
         for(int num : nums){
             fm.put(num, fm.getOrDefault(num, 0) + 1);
         }
-        //frequency map is calculated
-        //maintain a heap of size k - min heap
-        PriorityQueue<Pair> pq = new PriorityQueue<>((a, b) -> {
-            return a.freq - b.freq;
-        });
 
-        for(Integer key : fm.keySet()){
-            if(pq.size() == k){
-                //check the current freq > pq.top
-                if(pq.peek().freq < fm.get(key)){
-                    pq.poll();
-                    pq.add(new Pair(key, fm.get(key)));
+        //now create a freq array
+        int n = nums.length;
+        List<Integer>[] freqArr = new List[n + 1];
+        //now add all the element to freqArr
+        for(int key : fm.keySet()){
+            int freq = fm.get(key);
+            if(freqArr[freq]== null){
+                freqArr[freq] = new ArrayList<>();
+            }
+            freqArr[freq].add(key);
+        }
+
+        //now iterate from last to first
+        int[] ans = new int[k];
+        int index = 0;
+        for(int i=n; i>=0 && index<k; i--){
+            if(freqArr[i]!=null){
+                for(int num : freqArr[i]){
+                    ans[index++] = num;
+                    if(index == k){
+                        break;
+                    }
                 }
-            }else{
-                pq.add(new Pair(key, fm.get(key)));
             }
         }
 
-        //now we have k most frequent element
-        int[] ans = new int[k];
-        int index = 0;
-        while(!pq.isEmpty()){
-            ans[index++] = pq.poll().data;
-        }
         return ans;
     }
 }
