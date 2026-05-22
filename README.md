@@ -374,3 +374,5 @@ Copy and fill this at the end of each week:
 ---
 
 *Started: May 2026 · Target: SDE2 @ Swiggy / Zomato / Uber / Microsoft*
+
+*75 question Claude link : https://claude.ai/share/d66b7921-471f-440d-a38c-eb93380822d4*
