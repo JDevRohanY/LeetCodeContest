@@ -11,13 +11,13 @@ class ListNode2{
         prev = null;
     }
 }
-public class StackImplementation {
+public class MinStackImpementation {
     ListNode2 head;
     ListNode2 tail;
     int currMin;
     int size;
 
-    public StackImplementation() {
+    public MinStackImpementation() {
         currMin = Integer.MAX_VALUE;
         head = new ListNode2(0,0);
         tail = new ListNode2(0,0);
