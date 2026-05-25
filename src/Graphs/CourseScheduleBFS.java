@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-public class CourseSchedule {
+public class CourseScheduleBFS {
     public boolean canFinish(int numCourses, int[][] prerequisites) {
         //first create the adjacency list
         List<List<Integer>> adjacencyList = new ArrayList<>();
